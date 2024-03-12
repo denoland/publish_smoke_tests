@@ -1,0 +1,26 @@
+name: run_daily
+
+on:
+  workflow_dispatch:
+  schedule:
+    # do this every day at 22:00 UTC
+    - cron: "0 22 * * *"
+
+jobs:
+  build:
+    name: run tests
+    if: github.repository == 'denoland/publish_smoke_tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: canary
+
+      - name: Run tests
+        run: |
+          deno test -A ./tests.ts

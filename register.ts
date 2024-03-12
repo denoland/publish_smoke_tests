@@ -5,11 +5,17 @@ export interface Test {
   rev: string;
   publishDir?: string;
   prePublish?: (local$: typeof $, path: Path) => Promise<void> | void;
+  only?: boolean;
 }
 
 const tempDir = $.path(import.meta.dirname!).join("temp");
 
 export function registerTests(tests: Test[]) {
+  const onlyTests = tests.filter((t) => t.only);
+  if (onlyTests.length > 0 && Deno.env.get("CI") !== null) {
+    throw new Error("Cannot run only tests in CI")
+  }
+  tests = onlyTests.length > 0 ? onlyTests : tests;
   for (const [i, test] of tests.entries()) {
     Deno.test(`smoke test ${test.url}#${test.rev}`, () => {
       return runSmokeTest({

@@ -1,5 +1,10 @@
 {
   "imports": {
     "@david/dax": "jsr:@david/dax@^0.39.2"
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-explicit-any"]
+    }
   }
 }
