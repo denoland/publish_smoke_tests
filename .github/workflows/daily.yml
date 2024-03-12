@@ -3,8 +3,8 @@ name: run_daily
 on:
   workflow_dispatch:
   schedule:
-    # do this every day at 22:00 UTC
-    - cron: "0 22 * * *"
+    # do this every day at 20:00 UTC
+    - cron: "0 20 * * *"
 
 jobs:
   build:
