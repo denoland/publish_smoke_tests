@@ -6,5 +6,8 @@
     "rules": {
       "exclude": ["no-explicit-any"]
     }
-  }
+  },
+  "exclude": [
+    "temp"
+  ]
 }

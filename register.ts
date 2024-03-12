@@ -1,4 +1,14 @@
-import $, { CommandBuilder, Path } from "@david/dax";
+import { CommandBuilder, Path, build$ } from "@david/dax";
+
+const $ = build$({
+  commandBuilder: new CommandBuilder()
+    .env("PATH", getPathWithCurrentDenoVersion()),
+});
+
+// todo(https://github.com/dsherret/dax/pull/252): waiting on this PR
+// if ((await $`which deno`.text()).toLowerCase() !== Deno.execPath().toLowerCase()) {
+//   throw new Error("Deno was not set correctly in the path");
+// }
 
 export interface Test {
   url: string;
@@ -12,7 +22,7 @@ const tempDir = $.path(import.meta.dirname!).join("temp");
 
 export function registerTests(tests: Test[]) {
   const onlyTests = tests.filter((t) => t.only);
-  if (onlyTests.length > 0 && Deno.env.get("CI") !== null) {
+  if (onlyTests.length > 0 && Deno.env.get("CI") != null) {
     throw new Error("Cannot run only tests in CI")
   }
   tests = onlyTests.length > 0 ? onlyTests : tests;
@@ -54,7 +64,6 @@ async function runSmokeTest(opts: Test & { cwd: Path }) {
     ? opts.cwd.join(opts.publishDir)
     : opts.cwd;
   await $`deno publish --dry-run --allow-dirty`
-    .env("PATH", getPathWithCurrentDenoVersion())
     .cwd(publishCwd);
 
   // only bother cleaning up when it succeeds
@@ -63,10 +72,7 @@ async function runSmokeTest(opts: Test & { cwd: Path }) {
 
 function getPathWithCurrentDenoVersion() {
   const path = Deno.env.get("PATH")!;
-  const denoPath = Deno.execPath();
+  const denoPath = new Path(Deno.execPath()).parentOrThrow().toString();
   const separator = Deno.build.os === "windows" ? ";" : ":";
-  if (path.split(":").includes(denoPath)) {
-    return;
-  }
   return `${denoPath}${separator}${path}`;
 }
