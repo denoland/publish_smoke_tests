@@ -2,10 +2,7 @@ import { registerTests } from "./register.ts";
 
 registerTests([{
   url: "https://github.com/denoland/deno_std",
-  rev: "4da7440c62d79380aa1743d51ecc574a00b2c580",
-  prePublish: async ($) => {
-    await $`deno run -A ./_tools/convert_to_workspace.ts`;
-  },
+  rev: "377043ce8261be33a58265dcaad70eeb7f5b47ba",
 }, {
   url: "https://github.com/MTKruto/MTKruto",
   rev: "8a9f99722c420978cdcb289ec32f61af353dad2c",
