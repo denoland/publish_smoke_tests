@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   schedule:
     # do this every day at 20:00 UTC
-    - cron: "0 20 * * *"
+    # temp disabled
+    # - cron: "0 20 * * *"
 
 jobs:
   build:
